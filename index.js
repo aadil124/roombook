@@ -2,9 +2,13 @@ import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
 
+//username
+const username = `itaadil124`
+const pass_code = `6zuy1i1ZlrL5Fchv`
+
 //set the mongodb url and port number
 const MONGO_URL =
-  "mongodb+srv://itaadil124:6zuy1i1ZlrL5Fchv@cluster0.k17mdfz.mongodb.net/";
+  `mongodb+srv://${username}:${pass_code}@cluster0.k17mdfz.mongodb.net/`;
 
 const PORT = 4000;
 
@@ -42,6 +46,20 @@ app.get("/", (req, res) => {
   res.send("<h1>Server is working</h1>");
 });
 
-//creating room
+//creating rooms
+app.post("/create_room", async(req,res)=>{
+//retrieve the room data from req. body
+const data = req.body
+//insert the room data into the create_room collection db-booking
+const result = await client.db("booking").collection("create_room").insert(data)
+
+//check if the insertion is done or not
+if (result.acknowledged) {
+    res.status(200).send({msg:"Rooms are created successfully!"})
+} else {
+    res.status(400).send({msg:"Something went wrong! Please try again later"})
+}
+})
+
 
 app.listen(PORT, () => console.log(`Server is running at port ${PORT}`));
